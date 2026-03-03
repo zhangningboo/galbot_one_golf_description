@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!-- 
+#####################################################################################
+#
+# Copyright (c) 2023-2025 Galbot, Inc. All Rights Reserved.
+#
+# This software contains confidential and proprietary information of Galbot, Inc.
+# ("Confidential Information"). You shall not disclose such Confidential Information
+# and shall use it only in accordance with the terms of the license agreement you
+# entered into with Galbot, Inc.
+#
+# UNAUTHORIZED COPYING, USE, OR DISTRIBUTION OF THIS SOFTWARE, OR ANY PORTION OR
+# DERIVATIVE THEREOF, IS STRICTLY PROHIBITED. IF YOU HAVE RECEIVED THIS SOFTWARE IN
+# ERROR, PLEASE NOTIFY GALBOT, INC. IMMEDIATELY AND DELETE IT FROM YOUR SYSTEM.
+#
+#####################################################################################
+#
+# Description: XACRO file for left wrist camera.
+# Maintainer: Herman Ye, Yuhao Zeng@Galbot
+#
+#####################################################################################
+-->
+
+<robot name="left_wrist_d405_camera"
+  xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:macro name="left_wrist_d405_camera" params="parent *origin name:=left_wrist_d405_camera collision_type:=convex_decomposition">
+    <xacro:property name="M_PI" value="3.1415926535897931" />
+
+    <joint name="${name}_joint" type="fixed">
+      <xacro:insert_block name="origin" />
+      <parent link="${parent}" />
+      <child link="${name}_wrist_camera_link" />
+    </joint>
+
+    <link name="${name}_wrist_camera_link">
+      <inertial>
+        <origin xyz="-0.0687164275307753 0.00742418594708705 -0.0656976688947199" rpy="0 0 0"/>
+        <mass value="0.0533223543172611"/>
+        <inertia ixx="2.57961610647567E-05" ixy="-4.79475020826079E-07" ixz="-1.78893716134214E-06" iyy="1.37594261317448E-05" iyz="2.73965367892125E-07" izz="1.70502507719673E-05"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://galbot_one_golf_description/meshes/visual/camera/d405_camera/left_wrist_d405_camera/obj/left_wrist_d405_camera.obj" />
+        </geometry>
+        <material name="material_right_wrist_d405_camera">
+          <color rgba="0.7 0.7 0.7 1.0"/>
+        </material>
+      </visual>
+      <xacro:if value="${collision_type == 'mesh'}">
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/camera/d405_camera/left_wrist_d405_camera/original/left_wrist_d405_camera.stl" />
+          </geometry>
+        </collision>
+      </xacro:if>
+      <xacro:if value="${collision_type == 'convex_hull'}">
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/camera/d405_camera/left_wrist_d405_camera/convex_hull/left_wrist_d405_camera_convex_hull.stl" />
+          </geometry>
+        </collision>
+      </xacro:if>
+      <xacro:if value="${collision_type == 'convex_decomposition'}">
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh filename="package://galbot_one_golf_description/meshes/collision/camera/d405_camera/left_wrist_d405_camera/convex_decomposition/left_wrist_d405_camera_convex_decomposition_0.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh filename="package://galbot_one_golf_description/meshes/collision/camera/d405_camera/left_wrist_d405_camera/convex_decomposition/left_wrist_d405_camera_convex_decomposition_1.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh filename="package://galbot_one_golf_description/meshes/collision/camera/d405_camera/left_wrist_d405_camera/convex_decomposition/left_wrist_d405_camera_convex_decomposition_2.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh filename="package://galbot_one_golf_description/meshes/collision/camera/d405_camera/left_wrist_d405_camera/convex_decomposition/left_wrist_d405_camera_convex_decomposition_3.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh filename="package://galbot_one_golf_description/meshes/collision/camera/d405_camera/left_wrist_d405_camera/convex_decomposition/left_wrist_d405_camera_convex_decomposition_4.stl" />
+          </geometry>
+        </collision>
+      </xacro:if>
+    </link>
+  </xacro:macro>
+</robot>

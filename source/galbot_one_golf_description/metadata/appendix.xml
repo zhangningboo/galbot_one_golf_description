@@ -1,0 +1,72 @@
+  <equality>
+    <!-- Hitbot Gripper -->
+    <joint joint1="left_gripper_joint1" joint2="left_gripper_joint2" polycoef="0 1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+    <joint joint1="left_gripper_joint1" joint2="left_gripper_joint3" polycoef="0 -1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+    <joint joint1="left_gripper_joint1" joint2="left_gripper_joint4" polycoef="0 -1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+    <joint joint1="left_gripper_joint1" joint2="left_gripper_joint5" polycoef="0 -1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+    <joint joint1="left_gripper_joint1" joint2="left_gripper_joint6" polycoef="0 1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+  
+    <joint joint1="right_gripper_joint1" joint2="right_gripper_joint2" polycoef="0 1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+    <joint joint1="right_gripper_joint1" joint2="right_gripper_joint3" polycoef="0 -1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+    <joint joint1="right_gripper_joint1" joint2="right_gripper_joint4" polycoef="0 -1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+    <joint joint1="right_gripper_joint1" joint2="right_gripper_joint5" polycoef="0 -1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+    <joint joint1="right_gripper_joint1" joint2="right_gripper_joint6" polycoef="0 1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+
+    <!-- Galbot Gripper1 -->
+    <joint joint1="left_gripper_r_knuckle_joint" joint2="left_gripper_l_knuckle_joint" 
+      polycoef="0 1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+
+    <joint joint1="left_gripper_r_knuckle_joint" joint2="left_gripper_l_inner_knuckle_joint" 
+      polycoef="0 1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+
+    <joint joint1="left_gripper_r_knuckle_joint" joint2="left_gripper_r_inner_knuckle_joint" 
+      polycoef="0 -1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+
+    <joint joint1="left_gripper_r_knuckle_joint" joint2="left_gripper_l_finger_joint" 
+      polycoef="0 -1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+
+    <joint joint1="left_gripper_r_knuckle_joint" joint2="left_gripper_r_finger_joint" 
+      polycoef="0 1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+  
+    <joint joint1="right_gripper_r_knuckle_joint" joint2="right_gripper_l_knuckle_joint" 
+      polycoef="0 1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+    
+    <joint joint1="right_gripper_r_knuckle_joint" joint2="right_gripper_l_inner_knuckle_joint" 
+      polycoef="0 1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+
+    <joint joint1="right_gripper_r_knuckle_joint" joint2="right_gripper_r_inner_knuckle_joint" 
+      polycoef="0 -1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+
+    <joint joint1="right_gripper_r_knuckle_joint" joint2="right_gripper_l_finger_joint" 
+      polycoef="0 -1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+
+    <joint joint1="right_gripper_r_knuckle_joint" joint2="right_gripper_r_finger_joint" 
+      polycoef="0 1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1" />
+
+  </equality>
+
+  <sensor>
+    <jointvel name="vel_leg_joint1" joint="leg_joint1"/>
+    <jointvel name="vel_leg_joint2" joint="leg_joint2"/>
+    <jointvel name="vel_leg_joint3" joint="leg_joint3"/>
+    <jointvel name="vel_leg_joint4" joint="leg_joint4"/>
+    <jointvel name="vel_head_joint1" joint="head_joint1"/>
+    <jointvel name="vel_head_joint2" joint="head_joint2"/>
+    <jointvel name="vel_right_arm_joint1" joint="right_arm_joint1"/>
+    <jointvel name="vel_right_arm_joint2" joint="right_arm_joint2"/>
+    <jointvel name="vel_right_arm_joint3" joint="right_arm_joint3"/>
+    <jointvel name="vel_right_arm_joint4" joint="right_arm_joint4"/>
+    <jointvel name="vel_right_arm_joint5" joint="right_arm_joint5"/>
+    <jointvel name="vel_right_arm_joint6" joint="right_arm_joint6"/>
+    <jointvel name="vel_right_arm_joint7" joint="right_arm_joint7"/>
+    <jointvel name="vel_left_arm_joint1" joint="left_arm_joint1"/>
+    <jointvel name="vel_left_arm_joint2" joint="left_arm_joint2"/>
+    <jointvel name="vel_left_arm_joint3" joint="left_arm_joint3"/>
+    <jointvel name="vel_left_arm_joint4" joint="left_arm_joint4"/>
+    <jointvel name="vel_left_arm_joint5" joint="left_arm_joint5"/>
+    <jointvel name="vel_left_arm_joint6" joint="left_arm_joint6"/>
+    <jointvel name="vel_left_arm_joint7" joint="left_arm_joint7"/>
+  </sensor>
+
+  <contact>
+  </contact>

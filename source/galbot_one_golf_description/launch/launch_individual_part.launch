@@ -1,0 +1,55 @@
+<!-- 
+#####################################################################################
+#
+# Copyright (c) 2023-2025 Galbot, Inc. All Rights Reserved.
+#
+# This software contains confidential and proprietary information of Galbot, Inc.
+# ("Confidential Information"). You shall not disclose such Confidential Information
+# and shall use it only in accordance with the terms of the license agreement you
+# entered into with Galbot, Inc.
+#
+# UNAUTHORIZED COPYING, USE, OR DISTRIBUTION OF THIS SOFTWARE, OR ANY PORTION OR
+# DERIVATIVE THEREOF, IS STRICTLY PROHIBITED. IF YOU HAVE RECEIVED THIS SOFTWARE IN
+# ERROR, PLEASE NOTIFY GALBOT, INC. IMMEDIATELY AND DELETE IT FROM YOUR SYSTEM.
+#
+#####################################################################################
+#
+# Description: Launch file for displaying individual part of the robot.
+# Maintainer: Herman Ye, Yuhao Zeng@Galbot
+#
+#####################################################################################
+-->
+
+<launch>
+    <!-- Arguments -->
+    <!-- xacro_file: The path to the xacro file that defines the robot's model. -->
+    <arg name="xacro_file" default="$(find galbot_one_golf_description)/test/test_left_arm.xacro" />
+    <!-- collision_type: The type of collision model to use, default is convex_decomposition. -->
+    <arg name="collision_type" default="convex_decomposition" />
+
+    <!-- Parameters -->
+    <!-- robot_description: The URDF description of the robot generated from the xacro file. -->
+    <param name="robot_description"
+        command="$(find xacro)/xacro '$(arg xacro_file)'
+        collision_type:=$(arg collision_type)"
+    />
+
+    <!-- Nodes -->
+    <!-- robot_state_publisher: Publishes the state of the robot to the /tf and /robot_description
+    topics. -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <!-- gui: Determines whether to use the GUI for joint state publishing. -->
+    <arg name="gui" default="True" />
+    <!-- use_gui: Parameter to enable or disable the GUI for joint state publishing. -->
+    <param name="use_gui" value="$(arg gui)" />
+    <!-- joint_state_publisher_gui: Provides a GUI to manipulate joint states for testing purposes. -->
+    <node
+        name="joint_state_publisher_gui"
+        pkg="joint_state_publisher_gui"
+        type="joint_state_publisher_gui" />
+
+    <!-- rviz: Launches RViz with a specific configuration file to visualize the robot. -->
+    <node name="rviz" pkg="rviz" type="rviz"
+        args="-d $(find galbot_one_golf_description)/config/launch_individual_part.rviz"
+        required="true" />
+</launch>

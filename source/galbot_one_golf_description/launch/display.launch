@@ -1,0 +1,47 @@
+<!-- 
+#####################################################################################
+#
+# Copyright (c) 2023-2025 Galbot, Inc. All Rights Reserved.
+#
+# This software contains confidential and proprietary information of Galbot, Inc.
+# ("Confidential Information"). You shall not disclose such Confidential Information
+# and shall use it only in accordance with the terms of the license agreement you
+# entered into with Galbot, Inc.
+#
+# UNAUTHORIZED COPYING, USE, OR DISTRIBUTION OF THIS SOFTWARE, OR ANY PORTION OR
+# DERIVATIVE THEREOF, IS STRICTLY PROHIBITED. IF YOU HAVE RECEIVED THIS SOFTWARE IN
+# ERROR, PLEASE NOTIFY GALBOT, INC. IMMEDIATELY AND DELETE IT FROM YOUR SYSTEM.
+#
+#####################################################################################
+#
+# Description: Launch file for displaying robot.
+# Maintainer: Herman Ye, Yuhao Zeng@Galbot
+#
+#####################################################################################
+-->
+<launch>
+    <!-- Robot name -->
+    <arg name="robot_name" default="galbot_one_golf" />
+    <!-- Whether to use GUI -->
+    <arg name="gui" default="True" />
+
+
+    <!-- Load robot description -->
+    <arg name="robot_description_package" default="$(eval arg('robot_name') + '_description')" />
+    <arg name="urdf_path"
+        default="$(eval find(arg('robot_description_package')) + '/' + arg('robot_name') + '.urdf')" />
+    <param name="robot_description" textfile="$(arg urdf_path)" />
+
+    <!-- Robot state publisher -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+    <!-- Joint state publisher -->
+    <param name="use_gui" value="$(arg gui)" />
+    <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui"
+        type="joint_state_publisher_gui" />
+
+    <!-- Launch rviz with configuration -->
+    <arg name="rviz_path"
+        default="$(eval find(arg('robot_description_package')) + '/config/' + arg('robot_name') + '.rviz')" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_path)" required="true" />
+</launch>

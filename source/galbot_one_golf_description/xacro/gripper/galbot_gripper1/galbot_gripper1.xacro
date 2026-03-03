@@ -1,0 +1,984 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- 
+#####################################################################################
+#
+# Copyright (c) 2023-2025 Galbot, Inc. All Rights Reserved.
+#
+# This software contains confidential and proprietary information of Galbot, Inc.
+# ("Confidential Information"). You shall not disclose such Confidential Information
+# and shall use it only in accordance with the terms of the license agreement you
+# entered into with Galbot, Inc.
+#
+# UNAUTHORIZED COPYING, USE, OR DISTRIBUTION OF THIS SOFTWARE, OR ANY PORTION OR
+# DERIVATIVE THEREOF, IS STRICTLY PROHIBITED. IF YOU HAVE RECEIVED THIS SOFTWARE IN
+# ERROR, PLEASE NOTIFY GALBOT, INC. IMMEDIATELY AND DELETE IT FROM YOUR SYSTEM.
+#
+#####################################################################################
+#
+# Description: XACRO file for galbot_gripper1
+# Maintainer: Shi fei @Galbot
+#
+#####################################################################################
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="galbot_gripper1">
+
+  <xacro:macro name="galbot_gripper1" params="parent *origin name:=galbot_gripper1 collision_type:=convex_decomposition  tool_type:=zhitao"  >
+    <xacro:property name="M_PI" value="3.1415926535897931" />
+    <xacro:property name="mimic_scale" value="1"/>
+    <xacro:property name="control_prefix" value="${name}_r"/> 
+    <!-- 使用右侧外指作为驱动关节 -->
+    <!-- 固定关节连接父级 -->
+    <joint name="${name}_joint" type="fixed">
+      <xacro:insert_block name="origin" />
+      <parent link="${parent}" />
+      <child link="${name}_flange_link" />
+    </joint>
+    
+    <link name="${name}_flange_link">
+      <inertial>
+        <origin xyz="0.0030662 -1.4019E-18 3.383E-18" rpy="0 0 0" />
+        <mass value="0.031005" />
+        <inertia 
+          ixx="2.2585E-05" ixy="-2.0366E-21" ixz="-3.7461E-22"
+          iyy="1.141E-05"  iyz="-7.8518E-23" izz="1.141E-05" />
+      </inertial>
+      <visual>
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/visual/gripper/galbot_gripper1/flange_link.obj" /> 
+        </geometry>
+      </visual>
+
+      <xacro:if value="${collision_type == 'mesh'}">
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh filename="package://galbot_one_golf_description/meshes/visual/gripper/galbot_gripper1/flange_link.stl" /> 
+          </geometry>
+        </collision>
+      </xacro:if>
+      <xacro:if value="${collision_type == 'sphere'}">
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <sphere radius="0.01" />
+          </geometry>
+        </collision>
+      </xacro:if>
+       <!-- 凸包碰撞模型 -->
+      <xacro:if value="${collision_type == 'convex_hull'}">
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_hull/flange_link_convex_hull.stl" />
+          </geometry>
+        </collision>
+      </xacro:if>
+      <!-- 凸分解碰撞模型 -->
+      <xacro:if value="${collision_type == 'convex_decomposition'}">
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_hull/flange_link_convex_hull.stl" />
+          </geometry>
+        </collision>
+      </xacro:if>
+
+    </link>
+
+
+
+    <!-- 新增：基链接固定关节（连接法兰和基链接） -->
+    <joint name="${name}_base_joint" type="fixed">
+      <origin xyz="0.0065 0 0" rpy="0 0 0" /> 
+      <parent link="${name}_flange_link" />
+      <child link="${name}_base_link" />
+      <axis xyz="0 0 0" />
+    </joint>
+
+    <!-- 基础连杆 -->
+    <link name="${name}_base_link">
+      <inertial>
+        <origin xyz="0.037051 -6.4001E-05 6.4706E-05" rpy="0 0 0" />
+        <mass value="0.061747" />
+        <inertia 
+          ixx="2.5813E-05" 
+          ixy="4.7224E-08" 
+          ixz="-3.9403E-11"
+          iyy="7.2859E-05" 
+          iyz="-2.962E-10" 
+          izz="5.7173E-05"/>
+      </inertial>
+      <visual>
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/visual/gripper/galbot_gripper1/base_link.obj"/>
+        </geometry>
+      </visual>
+
+
+      <!-- 原始碰撞模型 -->
+      <xacro:if value="${collision_type == 'mesh'}">
+          <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/original/base_link.stl"/>
+            </geometry>
+          </collision>
+        </xacro:if>
+      <!-- 球碰撞模型 -->
+        <xacro:if value="${collision_type == 'sphere'}">
+          <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <sphere radius="0.05" />
+            </geometry>
+          </collision>
+        </xacro:if>
+      <!-- 凸包碰撞模型 -->
+      <xacro:if value="${collision_type == 'convex_hull'}">
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_hull/base_link_convex_hull.stl" />
+          </geometry>
+        </collision>
+      </xacro:if>
+      <!-- 凸分解碰撞模型 -->
+      <xacro:if value="${collision_type == 'convex_decomposition'}">
+        <collision>
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <geometry>
+      <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_0.stl" />
+    </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_1.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_2.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_3.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_4.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_5.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_6.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_7.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_8.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_9.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_10.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_11.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_12.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_13.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_14.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_15.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_16.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_17.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_18.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_19.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_20.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_21.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_22.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_23.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_24.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_25.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_26.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_27.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_28.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_29.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_30.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_31.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_32.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_33.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_34.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_35.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_36.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_37.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_38.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_39.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_40.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_41.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_42.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_43.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_44.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_45.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_46.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_47.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_48.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_49.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_50.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_51.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_52.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_53.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_54.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_55.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_56.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_57.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_58.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_59.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_60.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_61.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_62.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_63.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_64.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_65.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_66.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_67.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_68.stl" />
+        </geometry>
+      </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/base_link_convex_decomposition/base_link_convex_decomposition_69.stl" />
+        </geometry>
+      </collision>
+      </xacro:if>
+    </link>
+    
+    <!-- 手指宏 -->
+    <xacro:macro name="finger" params="link_prefix mesh_prefix mirror collision_type"> 
+      <!-- 指节 -->
+      <link name="${link_prefix}_knuckle_link">
+        <inertial>
+          <origin xyz="0.024101 0 0" rpy="0 0 0"/>
+          <mass value="0.0070682"/>
+          <inertia 
+            ixx="9.2131e-08" 
+            ixy="0" 
+            ixz="0"
+            iyy="1.559e-06" 
+            iyz="0" 
+            izz="1.4931e-06"/>
+        </inertial>
+        <visual>
+          <geometry>
+            <mesh filename="package://galbot_one_golf_description/meshes/visual/gripper/galbot_gripper1/${mesh_prefix}_link_1.obj"/>
+          </geometry>
+
+        </visual>
+
+
+        <!-- 原始碰撞模型 -->
+        <xacro:if value="${collision_type == 'mesh'}">
+          <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <mesh
+                filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/original/${mesh_prefix}_link_1.stl" />
+            </geometry>
+          </collision>
+        </xacro:if>
+        <!-- 球碰撞模型 -->
+        <xacro:if value="${collision_type == 'sphere'}">
+          <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <sphere radius="0.005" />
+            </geometry>
+          </collision>
+        </xacro:if>
+        <!-- 凸包碰撞模型 -->
+        <xacro:if value="${collision_type == 'convex_hull'}">
+          <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_hull/${mesh_prefix}_link_1_convex_hull.stl" />
+            </geometry>
+          </collision>
+        </xacro:if>
+        <!-- 凸分解碰撞模型 -->
+        <xacro:if value="${collision_type == 'convex_decomposition'}">
+          <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/${mesh_prefix}_link_1_convex_decomposition/${mesh_prefix}_link_1_convex_decomposition_0.stl" />
+            </geometry>
+          </collision>
+          <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/${mesh_prefix}_link_1_convex_decomposition/${mesh_prefix}_link_1_convex_decomposition_1.stl" />
+            </geometry>
+          </collision>
+        </xacro:if>
+      </link>
+
+
+      <!-- 内指节 -->
+      <link name="${link_prefix}_inner_knuckle_link">
+        <inertial>
+          <origin xyz="0.023769 0 0" rpy="0 0 0"/>
+          <mass value="0.007802"/>
+          <inertia 
+            ixx="1.044e-07" 
+            ixy="0" 
+            ixz="0"
+            iyy="1.6385e-06" 
+            iyz="0" 
+            izz="1.566e-06"/>
+        </inertial>
+        <visual>
+          <geometry>
+            <mesh filename="package://galbot_one_golf_description/meshes/visual/gripper/galbot_gripper1/${mesh_prefix}_link_2.obj"/>
+          </geometry>
+        </visual>
+
+
+        <!-- 原始碰撞模型 -->
+        <xacro:if value="${collision_type == 'mesh'}">
+          <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/original/${mesh_prefix}_link_2.stl"/>
+            </geometry>
+          </collision>
+        </xacro:if>
+
+        <xacro:if value="${collision_type == 'sphere'}">
+          <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <sphere radius="0.005" />
+            </geometry>
+          </collision>
+        </xacro:if>
+        <!-- 凸包碰撞模型 -->
+        <xacro:if value="${collision_type == 'convex_hull'}">
+          <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_hull/${mesh_prefix}_link_2_convex_hull.stl" />
+            </geometry>
+          </collision>
+        </xacro:if>
+        <!-- 凸分解碰撞模型 -->
+        <xacro:if value="${collision_type == 'convex_decomposition'}">
+          <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/${mesh_prefix}_link_2_convex_decomposition/${mesh_prefix}_link_2_convex_decomposition_0.stl" />
+            </geometry>
+          </collision>
+          <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+              <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/${mesh_prefix}_link_2_convex_decomposition/${mesh_prefix}_link_2_convex_decomposition_1.stl" />
+            </geometry>
+          </collision>
+        </xacro:if>
+      </link>
+
+      <joint name="${link_prefix}_inner_knuckle_joint" type="revolute">
+        <parent link="${name}_base_link"/>
+        <child link="${link_prefix}_inner_knuckle_link"/>
+        <origin xyz="0.079 0 ${-0.026*mirror}" rpy="${M_PI/2} ${1.2465*mirror} 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-3.13" upper="3.13" velocity="2.0" effort="1000"/>
+        <mimic joint="${name}_r_knuckle_joint" multiplier="${mimic_scale*mirror}"/>
+      </joint>
+      <xacro:if value="${tool_type == 'ori'}">
+          <!-- 指尖 -->
+          <link name="${link_prefix}_finger_link">
+            <inertial>
+              <origin xyz="0.016809 ${0.0019094*mirror} 0" rpy="0 0 0"/>
+              <mass value="0.015957"/>
+              <inertia 
+                ixx="5.5426e-07" 
+                ixy="0" 
+                ixz="0"
+                iyy="1.8538e-06" 
+                iyz="0" 
+                izz="1.5262e-06"/>
+            </inertial>
+            <visual>
+              <geometry>
+                <mesh filename="package://galbot_one_golf_description/meshes/visual/gripper/galbot_gripper1/${mesh_prefix}_link_3.obj"/>
+              </geometry>
+            </visual>
+
+      
+            <!-- 原始碰撞模型 -->
+            <xacro:if value="${collision_type == 'mesh'}">
+              <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                  <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/original/${mesh_prefix}_link_3.stl"/>
+                </geometry>
+              </collision>
+            </xacro:if>
+            <!-- 球碰撞模型 -->
+            <xacro:if value="${collision_type == 'sphere'}">
+              <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                  <sphere radius="0.005" />
+                </geometry>
+              </collision>
+            </xacro:if>
+            <!-- 凸包碰撞模型 -->
+            <xacro:if value="${collision_type == 'convex_hull'}">
+              <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                  <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_hull/${mesh_prefix}_link_3_convex_hull.stl" />
+                </geometry>
+              </collision>
+            </xacro:if>
+            <!-- 凸分解碰撞模型 -->
+            <xacro:if value="${collision_type == 'convex_decomposition'}">
+              <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                  <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/${mesh_prefix}_link_3_convex_decomposition/${mesh_prefix}_link_3_convex_decomposition_0.stl" />
+                </geometry>
+              </collision>
+              <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                  <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/${mesh_prefix}_link_3_convex_decomposition/${mesh_prefix}_link_3_convex_decomposition_1.stl" />
+                </geometry>
+              </collision>
+              <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                  <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/${mesh_prefix}_link_3_convex_decomposition/${mesh_prefix}_link_3_convex_decomposition_2.stl" />
+                </geometry>
+              </collision>
+              <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                  <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/${mesh_prefix}_link_3_convex_decomposition/${mesh_prefix}_link_3_convex_decomposition_3.stl" />
+                </geometry>
+              </collision>
+            </xacro:if>
+          </link>
+      </xacro:if>
+
+
+      <xacro:if value="${tool_type == 'zhitao'}">
+          <!-- 指尖 -->
+          <link name="${link_prefix}_finger_link">
+            <inertial>
+              <origin xyz="0.016809 ${0.0019094*mirror} 0" rpy="0 0 0"/>
+              <mass value="0.015957"/>
+              <inertia 
+                ixx="5.5426e-07" 
+                ixy="0" 
+                ixz="0"
+                iyy="1.8538e-06" 
+                iyz="0" 
+                izz="1.5262e-06"/>
+            </inertial>
+            <visual>
+              <geometry>
+                <mesh filename="package://galbot_one_golf_description/meshes/visual/gripper/galbot_gripper1/${mesh_prefix}_link_3_zhitao.obj"/>
+              </geometry>
+            </visual>
+
+      
+            <!-- 原始碰撞模型 -->
+            <xacro:if value="${collision_type == 'mesh'}">
+              <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                  <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/original/${mesh_prefix}_link_3_zhitao.stl"/>
+                </geometry>
+              </collision>
+            </xacro:if>
+            <!-- 球碰撞模型 -->
+            <xacro:if value="${collision_type == 'sphere'}">
+              <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                  <sphere radius="0.015" />
+                </geometry>
+              </collision>
+              <collision>
+                <origin xyz="0.02 0 0" rpy="0 0 0" />
+                <geometry>
+                  <sphere radius="0.015" />
+                </geometry>
+              </collision>
+              <collision>
+                <origin xyz="0.04 0 0" rpy="0 0 0" />
+                <geometry>
+                  <sphere radius="0.015" />
+                </geometry>
+              </collision>
+              <collision>
+                <origin xyz="0.06 0 0" rpy="0 0 0" />
+                <geometry>
+                  <sphere radius="0.01" />
+                </geometry>
+              </collision>
+            </xacro:if>
+            <!-- 凸包碰撞模型 -->
+            <xacro:if value="${collision_type == 'convex_hull'}">
+              <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                  <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_hull/${mesh_prefix}_link_3_zhitao_convex_hull.stl" />
+                </geometry>
+              </collision>
+            </xacro:if>
+            <!-- 凸分解碰撞模型 -->
+            <xacro:if value="${collision_type == 'convex_decomposition'}">
+              <xacro:if value="${mesh_prefix == 'l'}">
+                <!-- Left finger (6 parts) -->
+                <collision>
+                  <origin xyz="0 0 0" rpy="0 0 0" />
+                  <geometry>
+                    <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition_0.stl" />
+                  </geometry>
+                </collision>
+                <collision>
+                  <origin xyz="0 0 0" rpy="0 0 0" />
+                  <geometry>
+                    <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition_1.stl" />
+                  </geometry>
+                </collision>
+                <collision>
+                  <origin xyz="0 0 0" rpy="0 0 0" />
+                  <geometry>
+                    <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition_2.stl" />
+                  </geometry>
+                </collision>
+                <collision>
+                  <origin xyz="0 0 0" rpy="0 0 0" />
+                  <geometry>
+                    <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition_3.stl" />
+                  </geometry>
+                </collision>
+                <collision>
+                  <origin xyz="0 0 0" rpy="0 0 0" />
+                  <geometry>
+                    <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition_4.stl" />
+                  </geometry>
+                </collision>
+                <collision>
+                  <origin xyz="0 0 0" rpy="0 0 0" />
+                  <geometry>
+                    <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition_5.stl" />
+                  </geometry>
+                </collision>
+              </xacro:if>
+              
+              <xacro:if value="${mesh_prefix == 'r'}">
+                <!-- Right finger (4 parts) -->
+                <collision>
+                  <origin xyz="0 0 0" rpy="0 0 0" />
+                  <geometry>
+                    <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition_0.stl" />
+                  </geometry>
+                </collision>
+                <collision>
+                  <origin xyz="0 0 0" rpy="0 0 0" />
+                  <geometry>
+                    <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition_1.stl" />
+                  </geometry>
+                </collision>
+                <collision>
+                  <origin xyz="0 0 0" rpy="0 0 0" />
+                  <geometry>
+                    <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition_2.stl" />
+                  </geometry>
+                </collision>
+                <collision>
+                  <origin xyz="0 0 0" rpy="0 0 0" />
+                  <geometry>
+                    <mesh filename="package://galbot_one_golf_description/meshes/collision/gripper/galbot_gripper1/convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition/${mesh_prefix}_link_3_zhitao_convex_decomposition_3.stl" />
+                  </geometry>
+                </collision>
+              </xacro:if>
+            </xacro:if>
+          </link>
+      </xacro:if>
+
+      <joint name="${link_prefix}_finger_joint" type="revolute">
+        <parent link="${link_prefix}_inner_knuckle_link"/>
+        <child link="${link_prefix}_finger_link"/>
+        <origin xyz="0.045 0 0" rpy="0 0 ${1.2465*mirror}"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-3.13" upper="3.13" velocity="2.0" effort="1000"/>
+        <mimic joint="${name}_r_knuckle_joint" multiplier="${mimic_scale*-mirror}"/>
+      </joint>
+    </xacro:macro>
+
+    <!-- 生成手指，传递碰撞类型参数 -->
+    <xacro:finger 
+      link_prefix="${name}_l" 
+      mesh_prefix="l" 
+      mirror="1" 
+      collision_type="${collision_type}"
+    /> 
+    <xacro:finger 
+      link_prefix="${name}_r" 
+      mesh_prefix="r" 
+      mirror="-1" 
+      collision_type="${collision_type}"
+    />
+
+    <!-- 右侧指节关节（主动关节） -->
+    <joint name="${name}_r_knuckle_joint" type="revolute">
+      <parent link="${name}_base_link" />
+      <child link="${name}_r_knuckle_link" />
+      <origin xyz="0.0745 0 ${-0.0385*-1}" rpy="${M_PI/2} ${1.2465*-1} 0"/>
+      <axis xyz="0 0 -1" />
+      <limit lower="0.0" upper="1.703" velocity="0.5" effort="50" />
+    </joint>
+
+    <!-- 左侧指节关节 -->
+    <joint name="${name}_l_knuckle_joint" type="revolute">
+      <parent link="${name}_base_link" />
+      <child link="${name}_l_knuckle_link" />
+      <origin xyz="0.0745 0 ${-0.0385*1}" rpy="${M_PI/2} ${1.2465*1} 0"/>
+      <axis xyz="0 0 1" />
+      <limit lower="-3.13" upper="3.13" velocity="0.5" effort="50" />
+      <mimic joint="${name}_r_knuckle_joint" multiplier="1" />
+    </joint>
+
+
+
+    <!-- TCP -->
+    <link name="${name}_tcp_link"></link>
+
+    <joint name="${name}_tcp_joint" type="fixed">
+      <parent link="${name}_base_link"/>
+      <child link="${name}_tcp_link"/>
+      <origin xyz="0.13996 0 0" rpy="-${M_PI/2} 0 0"/>
+    </joint>
+  </xacro:macro>
+
+</robot>

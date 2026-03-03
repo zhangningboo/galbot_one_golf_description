@@ -1,0 +1,9 @@
+# 带相机和转接法兰的自研吸盘
+# m, mcx, mcy, mcz, Lxx, Lxy, Lyy, Lxz, Lyz, Lzz
+inertial = [0.695157, 0.026981129, -0.001913072, 0.0007751, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+# x, y, z, qx, qy, qz, qw
+pose_base = [0.000, 0.000, 0.000, 0.000, 0.707, 0.707, 0.000]
+pose_tcp = [-0.222607, 0.000, 0.000, 0.000, 0.707, 0.707, 0.000]
+mesh = "suction_cup_base_link.stl"
+ignore_link_names = ["right_arm_link7_0"]
+

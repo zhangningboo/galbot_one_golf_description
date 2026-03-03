@@ -1,0 +1,5 @@
+/urdf/meshes/** filter=lfs diff=lfs merge=lfs -text
+/mjcf/meshes/** filter=lfs diff=lfs merge=lfs -text
+/mjcf/tools/** filter=lfs diff=lfs merge=lfs -text
+/usd/** filter=lfs diff=lfs merge=lfs -text
+/source/galbot_one_golf_description/meshes/** filter=lfs diff=lfs merge=lfs -text

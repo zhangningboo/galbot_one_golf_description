@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<!-- 
+#####################################################################################
+#
+# Copyright (c) 2023-2025 Galbot, Inc. All Rights Reserved.
+#
+# This software contains confidential and proprietary information of Galbot, Inc.
+# ("Confidential Information"). You shall not disclose such Confidential Information
+# and shall use it only in accordance with the terms of the license agreement you
+# entered into with Galbot, Inc.
+#
+# UNAUTHORIZED COPYING, USE, OR DISTRIBUTION OF THIS SOFTWARE, OR ANY PORTION OR
+# DERIVATIVE THEREOF, IS STRICTLY PROHIBITED. IF YOU HAVE RECEIVED THIS SOFTWARE IN
+# ERROR, PLEASE NOTIFY GALBOT, INC. IMMEDIATELY AND DELETE IT FROM YOUR SYSTEM.
+#
+#####################################################################################
+#
+# Description: XACRO file for galbot one golf.
+# Maintainer: Herman Ye, Yuhao Zeng, Fei Shi@Galbot
+#
+#####################################################################################
+-->
+
+<robot name="galbot_one_golf"
+    xmlns:xacro="http://ros.org/wiki/xacro">
+    <!-- INCLUDE Basic Parts-->
+    <xacro:include
+        filename='$(find galbot_one_golf_description)/xacro/chassis/omni_chassis.xacro' />
+    <xacro:include
+        filename='$(find galbot_one_golf_description)/xacro/leg/leg.xacro' />
+    <xacro:include
+        filename='$(find galbot_one_golf_description)/xacro/torso/torso.xacro' />
+    <xacro:include
+        filename='$(find galbot_one_golf_description)/xacro/head/head.xacro' />
+    <xacro:include
+        filename='$(find galbot_one_golf_description)/xacro/left_arm/left_arm.xacro' />
+    <xacro:include
+        filename='$(find galbot_one_golf_description)/xacro/right_arm/right_arm.xacro' />
+
+    <!-- INCLUDE End Effector-->
+    <xacro:include
+        filename='$(find galbot_one_golf_description)/xacro/suction_cup/galbot_suction_cup1/galbot_suction_cup1.xacro' />
+    <xacro:include
+        filename='$(find galbot_one_golf_description)/xacro/gripper/hitbot_gripper/hitbot_gripper.xacro' />
+
+    <xacro:include
+        filename='$(find galbot_one_golf_description)/xacro/gripper/galbot_gripper1/galbot_gripper1.xacro' /> 
+
+
+    <!-- INCLUDE Sensor-->
+    <xacro:include
+        filename='$(find galbot_one_golf_description)/xacro/camera/d415_camera/left_wrist_d415_camera.xacro' />
+    <xacro:include
+        filename='$(find galbot_one_golf_description)/xacro/camera/d415_camera/right_wrist_d415_camera.xacro' />
+    <xacro:include
+        filename='$(find galbot_one_golf_description)/xacro/camera/d405_camera/left_wrist_d405_camera.xacro' />
+    <xacro:include
+        filename='$(find galbot_one_golf_description)/xacro/camera/d405_camera/right_wrist_d405_camera.xacro' />
+
+
+
+    <!-- PROPERTIES -->
+    <xacro:property
+        name="M_PI" value="3.1415926535897931" />
+    <xacro:property name="right_arm_end_effector_type"
+        value="$(arg right_arm_end_effector_type)" />
+    <xacro:property
+        name="left_arm_end_effector_type" value="$(arg left_arm_end_effector_type)" />
+    <xacro:property
+        name="left_wrist_sensor_type" value="$(arg left_wrist_sensor_type)" />
+    <xacro:property
+        name="right_wrist_sensor_type" value="$(arg right_wrist_sensor_type)" />
+    <xacro:property
+        name="collision_type" value="$(arg collision_type)" />
+    <!-- ROBOT -->
+    <!-- Robot Base Link -->
+    <link name="base_link">
+    </link>
+
+    <!-- Omni Chassis -->
+    <xacro:omni_chassis parent="base_link" name="omni_chassis"
+        collision_type="${collision_type}">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </xacro:omni_chassis>
+
+    <!-- Leg -->
+    <xacro:leg
+        parent="omni_chassis_leg_mount_link" name="leg" collision_type="${collision_type}">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </xacro:leg>
+
+    <!-- Torso -->
+    <xacro:torso
+        parent="leg_end_effector_mount_link" name="torso"
+        collision_type="${collision_type}">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </xacro:torso>
+
+    <!-- Head -->
+    <xacro:head
+        parent="torso_head_mount_link" name="head" collision_type="${collision_type}">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </xacro:head>
+
+    <!-- Right Arm-->
+    <xacro:right_arm
+        parent="torso_right_arm_mount_link" name="right_arm"
+        collision_type="${collision_type}">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </xacro:right_arm>
+
+    <!-- Left Arm-->
+    <xacro:left_arm
+        parent="torso_left_arm_mount_link" name="left_arm"
+        collision_type="${collision_type}">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </xacro:left_arm>
+
+
+    <!-- Right Arm End Effector -->
+    <xacro:if value="${right_arm_end_effector_type == 'galbot_suction_cup1'}">
+        <xacro:galbot_suction_cup1 parent="right_arm_end_effector_mount_link"
+            name="right_suction_cup" collision_type="${collision_type}">
+            <origin xyz="0 0 0" rpy="${-M_PI/2} ${M_PI} 0" />
+        </xacro:galbot_suction_cup1>
+    </xacro:if>
+
+    <xacro:if
+        value="${right_arm_end_effector_type == 'hitbot_gripper'}">
+        <xacro:hitbot_gripper parent="right_arm_end_effector_mount_link" name="right_gripper"
+            collision_type="${collision_type}">
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </xacro:hitbot_gripper>
+    </xacro:if>
+
+    <xacro:if value="${right_arm_end_effector_type == 'galbot_gripper1'}">
+        <xacro:galbot_gripper1 parent="right_arm_end_effector_mount_link" name="right_gripper"
+            collision_type="${collision_type}" tool_type="zhitao">
+            <origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
+        </xacro:galbot_gripper1>
+    </xacro:if> 
+
+
+    <!-- Right Wrist Sensor -->
+    <xacro:if value="${right_wrist_sensor_type == 'd415_camera'}">
+        <xacro:right_wrist_d415_camera parent="right_arm_link7" name="right">
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </xacro:right_wrist_d415_camera>
+    </xacro:if>
+    
+    <xacro:if value="${right_wrist_sensor_type == 'd405_camera'}">
+        <xacro:right_wrist_d405_camera parent="right_arm_link7" name="right">
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </xacro:right_wrist_d405_camera>
+    </xacro:if>
+
+    <!-- Left Arm End Effector -->
+
+    <xacro:if value="${left_arm_end_effector_type == 'galbot_suction_cup1'}">
+        <xacro:galbot_suction_cup1 parent="left_arm_end_effector_mount_link" name="left_suction_cup"
+            collision_type="${collision_type}">
+            <origin xyz="0 0 0" rpy="${-M_PI/2} ${-M_PI} 0" />
+        </xacro:galbot_suction_cup1>
+    </xacro:if>
+
+    <xacro:if value="${left_arm_end_effector_type == 'hitbot_gripper'}">
+        <xacro:hitbot_gripper parent="left_arm_end_effector_mount_link" name="left_gripper"
+            collision_type="${collision_type}">
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </xacro:hitbot_gripper>
+
+    </xacro:if>
+
+
+    <xacro:if value="${left_arm_end_effector_type == 'galbot_gripper1'}">
+        <xacro:galbot_gripper1 parent="left_arm_end_effector_mount_link" name="left_gripper"
+            collision_type="${collision_type}" tool_type="zhitao"> 
+            <origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
+        </xacro:galbot_gripper1>
+    </xacro:if>
+
+
+    <!-- Left Wrist Sensor -->
+    <xacro:if value="${left_wrist_sensor_type == 'd415_camera'}">
+        <xacro:left_wrist_d415_camera parent="left_arm_link7" name="left">
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </xacro:left_wrist_d415_camera>
+    </xacro:if>
+
+    <xacro:if value="${left_wrist_sensor_type == 'd405_camera'}">
+        <xacro:left_wrist_d405_camera parent="left_arm_link7" name="left">
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </xacro:left_wrist_d405_camera>
+    </xacro:if>
+
+</robot>
+
+

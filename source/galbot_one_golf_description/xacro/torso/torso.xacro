@@ -1,0 +1,274 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- 
+#####################################################################################
+#
+# Copyright (c) 2023-2025 Galbot, Inc. All Rights Reserved.
+#
+# This software contains confidential and proprietary information of Galbot, Inc.
+# ("Confidential Information"). You shall not disclose such Confidential Information
+# and shall use it only in accordance with the terms of the license agreement you
+# entered into with Galbot, Inc.
+#
+# UNAUTHORIZED COPYING, USE, OR DISTRIBUTION OF THIS SOFTWARE, OR ANY PORTION OR
+# DERIVATIVE THEREOF, IS STRICTLY PROHIBITED. IF YOU HAVE RECEIVED THIS SOFTWARE IN
+# ERROR, PLEASE NOTIFY GALBOT, INC. IMMEDIATELY AND DELETE IT FROM YOUR SYSTEM.
+#
+#####################################################################################
+#
+# Description: Xacro file for galbot_one_golf torso.
+# Author: Herman Ye, Yuhao Zeng@Galbot
+#
+#####################################################################################
+-->
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="torso">
+  <xacro:macro name="torso" params="parent *origin name:=torso collision_type:=convex_decomposition">
+
+    <xacro:property name="M_PI" value="3.1415926535897931" />
+
+    <joint name="${name}_joint" type="fixed">
+      <xacro:insert_block name="origin" />
+      <parent link="${parent}" />
+      <child link="${name}_base_link" />
+    </joint>
+
+    <link name="${name}_base_link">
+      <inertial>
+        <origin xyz="-4e-05 0.16976 -0.00174" rpy="0 0 0" />
+        <mass value="3.3" />
+        <inertia ixx="0.13068739999999998" ixy="-3.799e-05" ixz="2.6e-07" iyy="0.01888968"
+          iyz="-0.00210909" izz="0.13964288" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://galbot_one_golf_description/meshes/visual/torso/torso_base_link/obj/torso_base_link.obj" />
+        </geometry>
+      </visual>
+      <xacro:if value="${collision_type == 'sphere'}">
+        <collision>
+          <origin xyz="0.0 0.14 0.0" rpy="0 0 0" />
+          <!-- 0.0 0.0 0.34 -->
+          <geometry>
+            <sphere radius="0.14" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0.0 0.06 0.0" rpy="0 0 0" />
+          <!-- 0.0 0.0 0.26 -->
+          <geometry>
+            <sphere radius="0.13" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0.0 -0.02 0.0" rpy="0 0 0" />
+          <!-- 0.0 0.0 0.18 -->
+          <geometry>
+            <sphere radius="0.11" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="-0.06 0.18 0.0" rpy="0 0 0" />
+          <!-- 0.0 -0.06 0.38 -->
+          <geometry>
+            <sphere radius="0.11" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0.06 0.18 0.0" rpy="0 0 0" />
+          <!-- 0.0 0.06 0.38 -->
+          <geometry>
+            <sphere radius="0.11" />
+          </geometry>
+        </collision>
+      </xacro:if>
+      <xacro:if value="${collision_type == 'mesh'}">
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/original/torso_base_link.stl" />
+          </geometry>
+        </collision>
+      </xacro:if>
+      <xacro:if value="${collision_type == 'convex_hull'}">
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/convex_hull/torso_base_link_convex_hull.stl" />
+          </geometry>
+        </collision>
+      </xacro:if>
+      <xacro:if value="${collision_type == 'convex_decomposition'}">
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/convex_decomposition/torso_base_link_convex_decomposition_0.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/convex_decomposition/torso_base_link_convex_decomposition_1.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/convex_decomposition/torso_base_link_convex_decomposition_2.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/convex_decomposition/torso_base_link_convex_decomposition_3.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/convex_decomposition/torso_base_link_convex_decomposition_4.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/convex_decomposition/torso_base_link_convex_decomposition_5.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/convex_decomposition/torso_base_link_convex_decomposition_6.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/convex_decomposition/torso_base_link_convex_decomposition_7.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/convex_decomposition/torso_base_link_convex_decomposition_8.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/convex_decomposition/torso_base_link_convex_decomposition_9.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/convex_decomposition/torso_base_link_convex_decomposition_10.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/convex_decomposition/torso_base_link_convex_decomposition_11.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/convex_decomposition/torso_base_link_convex_decomposition_12.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/convex_decomposition/torso_base_link_convex_decomposition_13.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/convex_decomposition/torso_base_link_convex_decomposition_14.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/convex_decomposition/torso_base_link_convex_decomposition_15.stl" />
+          </geometry>
+        </collision>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+            <mesh
+              filename="package://galbot_one_golf_description/meshes/collision/torso/torso_base_link/convex_decomposition/torso_base_link_convex_decomposition_16.stl" />
+          </geometry>
+        </collision>
+
+      </xacro:if>
+    </link>
+
+    <!-- Left Arm Mount -->
+    <link name="${name}_left_arm_mount_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0" />
+        <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+      </inertial>
+    </link>
+    <joint name="${name}_left_arm_mount_joint" type="fixed">
+      <origin xyz="0.20843 0.172 0" rpy="0 ${M_PI/2} 0" />
+      <parent link="${name}_base_link" />
+      <child link="${name}_left_arm_mount_link" />
+      <axis xyz="0 0 0" />
+    </joint>
+
+    <!-- Right Arm Mount -->
+    <link name="${name}_right_arm_mount_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0" />
+        <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+      </inertial>
+    </link>
+    <joint name="${name}_right_arm_mount_joint" type="fixed">
+      <origin xyz="-0.20843 0.172 0" rpy="${M_PI} ${M_PI/2} 0" />
+      <parent link="${name}_base_link" />
+      <child link="${name}_right_arm_mount_link" />
+      <axis xyz="0 0 0" />
+    </joint>
+
+    <!-- Head Mount -->
+    <link name="${name}_head_mount_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0" />
+        <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+      </inertial>
+    </link>
+    <joint name="${name}_head_mount_joint" type="fixed">
+      <origin xyz="0 0.37711 0" rpy="${-M_PI/2} ${-M_PI/2} 0" />
+      <parent link="${name}_base_link" />
+      <child link="${name}_head_mount_link" />
+      <axis xyz="0 0 0" />
+    </joint>
+
+
+  </xacro:macro>
+</robot>

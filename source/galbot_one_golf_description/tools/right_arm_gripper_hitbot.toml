@@ -1,0 +1,8 @@
+# 慧灵夹爪
+# m, mcx, mcy, mcz, Lxx, Lxy, Lyy, Lxz, Lyz, Lzz
+inertial = [1.071, -0.080396757, -0.000081396, -0.001034586, 0.000672599, 0.000009259, 0.009093703, 0.000069163, 0.000000077, 0.008769416]
+# x, y, z, qx, qy, qz, qw, correspond to previous LINK
+pose_base = [0.000, 0.000, 0.000, 0.000, 0.707, 0.707, 0.000]
+pose_tcp = [-0.23074, 0.000, 0.000, 0.000, 0.707, -0.707, 0.000]
+mesh = "gripper_hitbot_base_link.stl"
+ignore_link_names = ["right_arm_link7_0"]
