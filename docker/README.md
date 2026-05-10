@@ -42,3 +42,26 @@ registry.cn-hangzhou.aliyuncs.com/zhangningboo/linux_amd64_ros1_noetic  ubuntu20
         $ docker run -itd --privileged -e DISPLAY=${REPLACE_YOUR_IP}:0.0 --shm-size 16G --name ros2-humble-v1 ros2-humble-v1 /bin/zsh
         $ docker run -itd --privileged -e DISPLAY=192.168.3.2:0.0 --shm-size 16G --name ros2-humble-v1 ros2-humble-v1 /bin/zsh
         ```
+
+### Ubuntu启动容器
+- 宿主机
+    ```shell
+    $ xhost +
+    $ podman run -it \
+        --network host \
+        --ipc=host \
+        --env DISPLAY=$DISPLAY \
+        --env QT_X11_NO_MITSHM=1 \
+        --volume /tmp/.X11-unix:/tmp/.X11-unix \
+        --device /dev/dri \
+        --name ros1_noetic \
+        registry.cn-hangzhou.aliyuncs.com/zhangningboo/linux_amd64_ros1_noetic:ubuntu20.04 \
+        /bin/zsh
+    ```
+- 容器内
+    ```shell
+    $ podman exec -it ros1_noetic zsh
+    $ roscore
+    # 另一个终端启动rviz窗口
+    $ rviz
+    ```
